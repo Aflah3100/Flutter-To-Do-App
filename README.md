@@ -8,7 +8,7 @@ This Flutter ToDo app allows users to manage their tasks efficiently. It interac
 
 - Flutter: Dart framework for building the mobile app.
 - http: HTTP client for making API requests.
-## Backend Setup
+
 
 ## API Reference
 The app interacts with the Swagger API for task management. Refer to the Swagger API documentation for detailed information on the available endpoints and request payloads.
