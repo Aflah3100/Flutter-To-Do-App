@@ -99,6 +99,16 @@ class ScreenTasks extends StatelessWidget {
       if (result) {
         Navigator.of(scaffoldKey.currentContext!).pop();
         ToDoListsServer.instance.fetchTasks();
+
+        if (action == ActionType.newTask) {
+          ScaffoldMessenger.of(scaffoldKey.currentContext!)
+              .showSnackBar(const SnackBar(
+            content: Text('Task Added!'),
+            duration: Duration(seconds: 3),
+            behavior: SnackBarBehavior.floating,
+            backgroundColor: Color.fromARGB(155, 255, 255, 255),
+          ));
+        }
       }
     }
   }

@@ -14,64 +14,84 @@ class ScreenToDoLists extends StatelessWidget {
     });
     return Scaffold(
       appBar: AppBar(
-        title: const Text('To Do App'),
+        title: const Text(
+          'To Do App',
+          style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
+        ),
         centerTitle: true,
       ),
       body: ValueListenableBuilder(
           valueListenable: ToDoListsServer.instance.taskListNotifier,
           builder:
               (BuildContext context, List<TasksModel> taskList, Widget? _) {
-            return ListView.separated(
-                itemBuilder: (BuildContext ctx, int index) {
-                  final task = taskList[index];
+            return (taskList.isEmpty)
+                ? const Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Center(
+                        child: Text(
+                          'No Tasks!',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 20.0),
+                        ),
+                      )
+                    ],
+                  )
+                : ListView.separated(
+                    itemBuilder: (BuildContext ctx, int index) {
+                      final task = taskList[index];
 
-                  return GestureDetector(
-                    onTap: () => Navigator.of(context)
-                        .push(MaterialPageRoute(builder: (context) {
-                      return ScreenTasks(
-                        action: ActionType.editTask,
-                        task: task,
-                      );
-                    })),
-                    //Task Widget
-                    child: Card(
-                      child: ListTile(
-                        leading: CircleAvatar(
-                          child: Text(
-                            (index + 1).toString(),
-                            style: const TextStyle(fontWeight: FontWeight.bold),
+                      return GestureDetector(
+                        onTap: () => Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (context) {
+                          return ScreenTasks(
+                            action: ActionType.editTask,
+                            task: task,
+                          );
+                        })),
+                        //Task Widget
+                        child: Card(
+                          child: ListTile(
+                            leading: CircleAvatar(
+                              child: Text(
+                                (index + 1).toString(),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            title: Center(
+                                child: Text(
+                              task.title,
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                            )),
+                            subtitle: Center(child: Text(task.description)),
+                            trailing:
+                                PopupMenuButton(onSelected: (value) async {
+                              final result = await ToDoListsServer.instance
+                                  .deleteTask(task.id);
+
+                              if (result) {
+                                ToDoListsServer.instance.fetchTasks();
+                              }
+                            }, itemBuilder: (BuildContext context) {
+                              return [
+                                const PopupMenuItem(
+                                    value: 'delete',
+                                    child: Center(child: Text('Delete')))
+                              ];
+                            }),
                           ),
                         ),
-                        title: Center(
-                            child: Text(
-                          task.title,
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        )),
-                        subtitle: Center(child: Text(task.description)),
-                        trailing: PopupMenuButton(onSelected: (value) async {
-                          final result = await ToDoListsServer.instance
-                              .deleteTask(task.id);
-
-                          if (result) {
-                            ToDoListsServer.instance.fetchTasks();
-                          }
-                        }, itemBuilder: (BuildContext context) {
-                          return [
-                            const PopupMenuItem(
-                                value: 'delete',
-                                child: Center(child: Text('Delete')))
-                          ];
-                        }),
-                      ),
-                    ),
-                  );
-                },
-                separatorBuilder: (BuildContext ctx, int index) {
-                  return const SizedBox(
-                    height: 10.0,
-                  );
-                },
-                itemCount: taskList.length);
+                      );
+                    },
+                    separatorBuilder: (BuildContext ctx, int index) {
+                      return const SizedBox(
+                        height: 10.0,
+                      );
+                    },
+                    itemCount: taskList.length);
           }),
       floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
