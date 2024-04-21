@@ -16,14 +16,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'To-Do-App',
       theme: const MaterialTheme(TextTheme()).light(),
-      darkTheme: const MaterialTheme(TextTheme()).darkHighContrast(),
+      darkTheme: const MaterialTheme(TextTheme()).dark(),
       themeMode: ThemeMode.dark,
-      
-      home: ScreenToDoLists(),
+      home: const ScreenToDoLists(),
       routes: {
-        'task-screen':(context) =>  ScreenTasks()
+        'new-task-screen': (context) => ScreenTasks(action: ActionType.newTask),
       },
     );
   }
 }
-
