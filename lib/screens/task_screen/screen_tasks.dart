@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_to_do_app/model/task_model/taskmodel.dart';
 import 'package:flutter_to_do_app/model/tasks_model/tasksmodel.dart';
+import 'package:flutter_to_do_app/screens/task_screen/widgets/taskinput.dart';
 import 'package:flutter_to_do_app/services/apicalls.dart';
 
 enum ActionType { newTask, editTask }
@@ -34,43 +35,17 @@ class ScreenTasks extends StatelessWidget {
             ? const Text('Create Task')
             : const Text('Edit Task'),
         centerTitle: true,
-        titleTextStyle:
-            const TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+        titleTextStyle: Theme.of(context)
+            .textTheme
+            .titleLarge!
+            .copyWith(fontWeight: FontWeight.bold),
       ),
       body: SafeArea(
-          child: ListView(
-        padding: const EdgeInsets.all(10.0),
-        children: [
-          //Title-Text-Field
-          Form(
-            key: formKey1,
-            child: TextFormField(
-              validator: (title) =>
-                  (title == null || title.isEmpty) ? 'Title Is Empty' : null,
-              controller: titleController,
-              decoration: const InputDecoration(hintText: 'Title'),
-            ),
-          ),
-          const SizedBox(
-            height: 30.0,
-          ),
-          //Description-Field
-          Form(
-            key: formKey2,
-            child: TextFormField(
-              validator: (description) =>
-                  (description == null || description.isEmpty)
-                      ? 'Description Is Empty'
-                      : null,
-              controller: descriptionController,
-              keyboardType: TextInputType.multiline,
-              minLines: 1,
-              maxLines: null,
-              decoration: const InputDecoration(hintText: 'Description'),
-            ),
-          )
-        ],
-      )),
+          child: TaskInput(
+              formKey1: formKey1,
+              titleController: titleController,
+              formKey2: formKey2,
+              descriptionController: descriptionController)),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: submitTask,
         label: const Icon(Icons.add),
